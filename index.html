@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Resume Builder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Dynamic Resume Builder By Hareem Farooqi</h1>
+    </header>
+
+    <div class="container">
+        <!-- Form Section -->
+        <form id="resume-form">
+            <input type="text" id="name" placeholder="Name">
+            <input type="email" id="email" placeholder="Email">
+            <input type="text" id="phone" placeholder="Phone">
+            <input type="text" id="degree" placeholder="Degree">
+            <input type="text" id="institution" placeholder="Institution">
+            <input type="text" id="gradYear" placeholder="Graduation Year">
+            <input type="text" id="jobTitle" placeholder="Job Title">
+            <input type="text" id="company" placeholder="Company">
+            <input type="text" id="years" placeholder="Years Worked">
+            <textarea id="jobDesc" placeholder="Job Description"></textarea>
+            <input type="text" id="skills" placeholder="Skills (comma separated)">
+            
+            <!-- Preview and Download buttons -->
+            <button type="button" id="preview-resume">Preview Resume</button>
+            <button type="button" id="download-pdf" onclick="downloadResumePDF()" style="display:none;">Download as PDF</button>
+        </form>
+
+        <!-- Resume Preview Section -->
+        <div id="resume-display" class="resume-preview" style="display:none;">
+            <h2>Resume Preview</h2>
+            <p><strong>Name:</strong> <span id="display-name"></span></p>
+            <p><strong>Email:</strong> <span id="display-email"></span></p>
+            <p><strong>Phone:</strong> <span id="display-phone"></span></p>
+            <p><strong>Degree:</strong> <span id="display-degree"></span></p>
+            <p><strong>Institution:</strong> <span id="display-institution"></span></p>
+            <p><strong>Graduation Year:</strong> <span id="display-gradYear"></span></p>
+            <p><strong>Job Title:</strong> <span id="display-jobTitle"></span></p>
+            <p><strong>Company:</strong> <span id="display-company"></span></p>
+            <p><strong>Years Worked:</strong> <span id="display-years"></span></p>
+            <p><strong>Job Description:</strong> <span id="display-jobDesc"></span></p>
+            <p><strong>Skills:</strong> <span id="display-skills"></span></p>
+
+            <!-- Download and Edit buttons -->
+            <button id="edit-resume">Edit Resume</button>
+            <button id="download-pdf" onclick="downloadResumePDF()">Download PDF</button> <!-- Now uses inline handler -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Dynamic Resume Builder By Hareem Farooqi</p>
+    </footer>
+
+    <!-- Include html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    <!-- JavaScript code -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOM Content Loaded and JavaScript is working!");  // Initial debug log
+            
+            const form = document.getElementById('resume-form');
+            const resumeDisplay = document.getElementById('resume-display');
+            const editButton = document.getElementById('edit-resume');
+            const previewButton = document.getElementById('preview-resume');
+            const downloadButton = document.getElementById('download-pdf');
+
+            // Function to populate and show the preview
+            function previewResume() {
+                console.log("Preview Resume triggered");  // Debugging log
+
+                // Populate the resume preview fields
+                document.getElementById('display-name').textContent = document.getElementById('name').value;
+                document.getElementById('display-email').textContent = document.getElementById('email').value;
+                document.getElementById('display-phone').textContent = document.getElementById('phone').value;
+                document.getElementById('display-degree').textContent = document.getElementById('degree').value;
+                document.getElementById('display-institution').textContent = document.getElementById('institution').value;
+                document.getElementById('display-gradYear').textContent = document.getElementById('gradYear').value;
+                document.getElementById('display-jobTitle').textContent = document.getElementById('jobTitle').value;
+                document.getElementById('display-company').textContent = document.getElementById('company').value;
+                document.getElementById('display-years').textContent = document.getElementById('years').value;
+                document.getElementById('display-jobDesc').textContent = document.getElementById('jobDesc').value;
+                document.getElementById('display-skills').textContent = document.getElementById('skills').value;
+
+                // Show preview and buttons
+                resumeDisplay.style.display = 'block';
+                downloadButton.style.display = 'inline-block';  // Ensure button is visible
+                console.log("Download Button should now be visible:", downloadButton.style.display);  // Debugging log
+                form.style.display = 'none';  // Hide the form
+            }
+
+            // Function to return to editing mode
+            function editResume() {
+                console.log("Edit Resume triggered");  // Debugging log
+
+                form.style.display = 'block';
+                resumeDisplay.style.display = 'none';
+                downloadButton.style.display = 'none';  // Hide download button
+            }
+
+            // Function to download the resume as PDF using html2pdf
+            window.downloadResumePDF = function() {
+                console.log("Download PDF button clicked");  // Debugging log
+
+                const resumeSection = document.getElementById('resume-display');
+                if (resumeSection) {
+                    console.log("Generating PDF...");  // Debugging log
+
+                    // PDF options
+                    const opt = {
+                        margin: 1,
+                        filename: 'resume.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+
+                    // Try generating PDF
+                    html2pdf().from(resumeSection).set(opt).save();
+                } else {
+                    console.error("Resume section is not defined or is empty.");
+                }
+            }
+
+            // Event listeners
+            previewButton.addEventListener('click', previewResume);
+            editButton.addEventListener('click', editResume);
+        });
+    </script>
+</body>
+</html>
